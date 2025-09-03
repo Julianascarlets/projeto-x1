@@ -1,81 +1,88 @@
-import json
-import os
+const fs = require("fs");
+const prompt = require("prompt-sync")();
 
-ARQUIVO = "clientes.json"
-clientes = []
+const ARQUIVO = "clientes.json";
+let clientes = [];
 
-# Função para carregar clientes do arquivo
-def carregar_clientes():
-    global clientes
-    if os.path.exists(ARQUIVO):
-        with open(ARQUIVO, "r", encoding="utf-8") as f:
-            clientes = json.load(f)
-    else:
-        clientes = []
-
-# Função para salvar clientes no arquivo
-def salvar_clientes():
-    with open(ARQUIVO, "w", encoding="utf-8") as f:
-        json.dump(clientes, f, indent=4, ensure_ascii=False)
-
-def adicionar_cliente():
-    print("\n=== CADASTRO DE CLIENTE ===")
-    nome = input("Nome do cliente: ")
-    endereco = input("Endereço: ")
-    telefone = input("Telefone: ")
-    tipo_acesso = input("Tipo de acesso (admin/usuario/visitante): ")
-
-    # Campos financeiros
-    objetivo = input("O que o cliente quer fazer (objetivo): ")
-    investimento = input("Quanto deseja investir: ")
-    perdas = input("Principais perdas esperadas: ")
-    ganhos = input("Principais ganhos esperados: ")
-
-    cliente = {
-        "nome": nome,
-        "endereco": endereco,
-        "telefone": telefone,
-        "tipo_acesso": tipo_acesso,
-        "objetivo": objetivo,
-        "investimento": investimento,
-        "perdas": perdas,
-        "ganhos": ganhos
+// Carregar clientes do arquivo
+function carregarClientes() {
+    if (fs.existsSync(ARQUIVO)) {
+        const data = fs.readFileSync(ARQUIVO, "utf-8");
+        clientes = JSON.parse(data);
+    } else {
+        clientes = [];
     }
+}
 
-    clientes.append(cliente)
-    salvar_clientes()
-    print("\n✅ Cliente adicionado com sucesso!\n")
+// Salvar clientes no arquivo
+function salvarClientes() {
+    fs.writeFileSync(ARQUIVO, JSON.stringify(clientes, null, 4), "utf-8");
+}
 
-def listar_clientes():
-    if not clientes:
-        print("\n⚠ Nenhum cliente cadastrado!\n")
-    else:
-        print("\n=== LISTA DE CLIENTES ===")
-        for i, c in enumerate(clientes, start=1):
-            print(f"{i}. {c['nome']} | {c['telefone']} | Investimento: {c['investimento']}")
-            print(f"   Objetivo: {c['objetivo']}")
-            print(f"   Perdas: {c['perdas']} | Ganhos: {c['ganhos']}")
-            print("-" * 40)
-        print()
+function adicionarCliente() {
+    console.log("\n=== CADASTRO DE CLIENTE ===");
+    const nome = prompt("Nome do cliente: ");
+    const endereco = prompt("Endereço: ");
+    const telefone = prompt("Telefone: ");
+    const tipoAcesso = prompt("Tipo de acesso (admin/usuario/visitante): ");
 
-def menu():
-    carregar_clientes()
-    while True:
-        print("===== MENU =====")
-        print("1 - Adicionar cliente")
-        print("2 - Listar clientes")
-        print("3 - Sair")
-        opcao = input("Escolha uma opção: ")
+    // Campos financeiros
+    const objetivo = prompt("O que o cliente quer fazer (objetivo): ");
+    const investimento = prompt("Quanto deseja investir: ");
+    const perdas = prompt("Principais perdas esperadas: ");
+    const ganhos = prompt("Principais ganhos esperados: ");
 
-        if opcao == "1":
-            adicionar_cliente()
-        elif opcao == "2":
-            listar_clientes()
-        elif opcao == "3":
-            print("Saindo do programa...")
-            break
-        else:
-            print("⚠ Opção inválida! Tente novamente.\n")
+    const cliente = {
+        nome,
+        endereco,
+        telefone,
+        tipoAcesso,
+        objetivo,
+        investimento,
+        perdas,
+        ganhos
+    };
 
-# Executa o programa
-menu()
+    clientes.push(cliente);
+    salvarClientes();
+    console.log("\n✅ Cliente adicionado com sucesso!\n");
+}
+
+function listarClientes() {
+    if (clientes.length === 0) {
+        console.log("\n⚠ Nenhum cliente cadastrado!\n");
+    } else {
+        console.log("\n=== LISTA DE CLIENTES ===");
+        clientes.forEach((c, i) => {
+            console.log(`${i + 1}. ${c.nome} | ${c.telefone} | Investimento: ${c.investimento}`);
+            console.log(`   Objetivo: ${c.objetivo}`);
+            console.log(`   Perdas: ${c.perdas} | Ganhos: ${c.ganhos}`);
+            console.log("-".repeat(40));
+        });
+    }
+}
+
+function menu() {
+    carregarClientes();
+    while (true) {
+        console.log("===== MENU =====");
+        console.log("1 - Adicionar cliente");
+        console.log("2 - Listar clientes");
+        console.log("3 - Sair");
+        const opcao = prompt("Escolha uma opção: ");
+
+        if (opcao === "1") {
+            adicionarCliente();
+        } else if (opcao === "2") {
+            listarClientes();
+        } else if (opcao === "3") {
+            console.log("Saindo do programa...");
+            break;
+        } else {
+            console.log("⚠ Opção inválida! Tente novamente.\n");
+        }
+    }
+}
+
+// Executar programa
+menu();
