@@ -80,7 +80,7 @@ function atualizarCliente() {
     const nome = prompt(`Nome (${cliente.nome}): `) || cliente.nome;
     const endereco = prompt(`Endereço (${cliente.endereco}): `) || cliente.endereco;
     const telefone = prompt(`Telefone (${cliente.telefone}): `) || cliente.telefone;
-    const tipoAcesso = prompt(`Tipo de acesso (${cliente.tipoAcesso}): `) || cliente.tipoAcesso;
+    const tipoAcesso = prompt(`Tipo de acesso (${cliente.tipoAcesso}): `) || ("cliente.tipoAcesso");
     const objetivo = prompt(`Objetivo (${cliente.objetivo}): `) || cliente.objetivo;
     const investimento = prompt(`Investimento (${cliente.investimento}): `) || cliente.investimento;
     const perdas = prompt(`Perdas (${cliente.perdas}): `) || cliente.perdas;
@@ -139,4 +139,4 @@ function menu() {
 }
 
 // Executar programa
-
+Menu();
