@@ -139,4 +139,4 @@ function menu() {
 }
 
 // Executar programa
-menu();
+
