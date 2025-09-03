@@ -7,8 +7,8 @@ let clientes = [];
 // Carregar clientes do arquivo
 function carregarClientes() {
     if (fs.existsSync(ARQUIVO)) {
-        const data = fs.readFileSync(ARQUIVO, "utf-8");
-        clientes = JSON.parse(data);
+        const dados = fs.readFileSync(ARQUIVO, "utf-8");
+        clientes = JSON.parse(dados);
     } else {
         clientes = [];
     }
@@ -19,6 +19,7 @@ function salvarClientes() {
     fs.writeFileSync(ARQUIVO, JSON.stringify(clientes, null, 4), "utf-8");
 }
 
+// Criar cliente
 function adicionarCliente() {
     console.log("\n=== CADASTRO DE CLIENTE ===");
     const nome = prompt("Nome do cliente: ");
@@ -26,7 +27,6 @@ function adicionarCliente() {
     const telefone = prompt("Telefone: ");
     const tipoAcesso = prompt("Tipo de acesso (admin/usuario/visitante): ");
 
-    // Campos financeiros
     const objetivo = prompt("O que o cliente quer fazer (objetivo): ");
     const investimento = prompt("Quanto deseja investir: ");
     const perdas = prompt("Principais perdas esperadas: ");
@@ -48,6 +48,7 @@ function adicionarCliente() {
     console.log("\n✅ Cliente adicionado com sucesso!\n");
 }
 
+// Listar clientes
 function listarClientes() {
     if (clientes.length === 0) {
         console.log("\n⚠ Nenhum cliente cadastrado!\n");
@@ -62,13 +63,62 @@ function listarClientes() {
     }
 }
 
+// Atualizar cliente
+function atualizarCliente() {
+    listarClientes();
+    if (clientes.length === 0) return;
+
+    const indice = parseInt(prompt("Digite o número do cliente para atualizar: ")) - 1;
+    if (indice < 0 || indice >= clientes.length) {
+        console.log("⚠ Cliente não encontrado!");
+        return;
+    }
+
+    let cliente = clientes[indice];
+
+    console.log("\n=== ATUALIZAR CLIENTE === (pressione Enter para manter o valor atual)");
+    const nome = prompt(`Nome (${cliente.nome}): `) || cliente.nome;
+    const endereco = prompt(`Endereço (${cliente.endereco}): `) || cliente.endereco;
+    const telefone = prompt(`Telefone (${cliente.telefone}): `) || cliente.telefone;
+    const tipoAcesso = prompt(`Tipo de acesso (${cliente.tipoAcesso}): `) || cliente.tipoAcesso;
+    const objetivo = prompt(`Objetivo (${cliente.objetivo}): `) || cliente.objetivo;
+    const investimento = prompt(`Investimento (${cliente.investimento}): `) || cliente.investimento;
+    const perdas = prompt(`Perdas (${cliente.perdas}): `) || cliente.perdas;
+    const ganhos = prompt(`Ganhos (${cliente.ganhos}): `) || cliente.ganhos;
+
+    clientes[indice] = { nome, endereco, telefone, tipoAcesso, objetivo, investimento, perdas, ganhos };
+    salvarClientes();
+    console.log("\n✅ Cliente atualizado com sucesso!\n");
+}
+
+// Excluir cliente
+function excluirCliente() {
+    listarClientes();
+    if (clientes.length === 0) return;
+
+    const indice = parseInt(prompt("Digite o número do cliente para excluir: ")) - 1;
+    if (indice < 0 || indice >= clientes.length) {
+        console.log("⚠ Cliente não encontrado!");
+        return;
+    }
+
+    const clienteRemovido = clientes.splice(indice, 1);
+    salvarClientes();
+    console.log(`\n🗑 Cliente "${clienteRemovido[0].nome}" excluído com sucesso!\n`);
+}
+
+// Menu principal
 function menu() {
     carregarClientes();
     while (true) {
-        console.log("===== MENU =====");
+        console.log("\n===== MENU =====");
         console.log("1 - Adicionar cliente");
         console.log("2 - Listar clientes");
-        console.log("3 - Sair");
+        console.log("3 - Atualizar cliente");
+        console.log("4 - Excluir cliente
+
+        console.log("5 - Sair");
+
         const opcao = prompt("Escolha uma opção: ");
 
         if (opcao === "1") {
@@ -76,6 +126,10 @@ function menu() {
         } else if (opcao === "2") {
             listarClientes();
         } else if (opcao === "3") {
+            atualizarCliente();
+        } else if (opcao === "4") {
+            excluirCliente();
+        } else if (opcao === "5") {
             console.log("Saindo do programa...");
             break;
         } else {
